@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        Int          @id @default(autoincrement())
+  email     String       @unique
+  name      String?
+  companies Enterprise[] // Relación muchos-a-muchos opcional
+  address   String
+}
+
+model Enterprise {
+  id       Int    @id @default(autoincrement())
+  name     String
+  employees   User?  @relation(fields: [authorId], references: [id]) // Relación uno-a-muchos opcional
+  authorId Int? // Campo para la clave foránea opcional
+}
