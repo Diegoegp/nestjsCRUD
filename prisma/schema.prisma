@@ -3,22 +3,21 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id        Int          @id @default(autoincrement())
-  email     String       @unique
-  name      String?
-  companies Enterprise[] // Relación muchos-a-muchos opcional
-  address   String
+model Employee {
+  id        Int     @id @default(autoincrement())
+  name      String
+  position  String
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId Int
 }
 
-model Enterprise {
-  id       Int    @id @default(autoincrement())
-  name     String
-  employees   User?  @relation(fields: [authorId], references: [id]) // Relación uno-a-muchos opcional
-  authorId Int? // Campo para la clave foránea opcional
+model Company {
+  id        Int        @id @default(autoincrement())
+  name      String
+  employees Employee[]
 }
